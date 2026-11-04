@@ -1,0 +1,30 @@
+{
+  "name": "AFPS Fee Management & School Administration",
+  "short_name": "AFPS Fee",
+  "description": "Streamlined fee collection, accounts, and student administration with mobile Parent Fee Portal",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#5A54B4",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
