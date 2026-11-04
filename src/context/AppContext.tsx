@@ -445,7 +445,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     amount,
     method,
     category = "School Fee",
-    academicYear = "2026–2027",
+    academicYear = "2026-2027",
     months,
     referenceNo,
     remarks

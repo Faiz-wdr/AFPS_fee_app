@@ -94,16 +94,16 @@ export const initialFeeCategories: FeeCategory[] = [
 ];
 
 export const initialFeeStructures: FeeStructure[] = [
-  { id: "fs-01", academicYear: "2026–2027", className: "Class 1", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1100, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-02", academicYear: "2026–2027", className: "Class 2", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1200, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-03", academicYear: "2026–2027", className: "Class 3", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1300, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-04", academicYear: "2026–2027", className: "Class 4", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1400, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-05", academicYear: "2026–2027", className: "Class 5", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1500, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-06", academicYear: "2026–2027", className: "Class 6", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1800, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-07", academicYear: "2026–2027", className: "Class 7", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2000, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-08", academicYear: "2026–2027", className: "Class 8", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2200, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-09", academicYear: "2026–2027", className: "Class 9", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2500, frequency: "Monthly", dueDate: "10th of every month" },
-  { id: "fs-10", academicYear: "2026–2027", className: "Class 10", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2800, frequency: "Monthly", dueDate: "10th of every month" }
+  { id: "fs-01", academicYear: "2026-2027", className: "Class 1", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1100, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-02", academicYear: "2026-2027", className: "Class 2", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1200, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-03", academicYear: "2026-2027", className: "Class 3", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1300, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-04", academicYear: "2026-2027", className: "Class 4", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1400, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-05", academicYear: "2026-2027", className: "Class 5", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1500, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-06", academicYear: "2026-2027", className: "Class 6", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 1800, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-07", academicYear: "2026-2027", className: "Class 7", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2000, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-08", academicYear: "2026-2027", className: "Class 8", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2200, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-09", academicYear: "2026-2027", className: "Class 9", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2500, frequency: "Monthly", dueDate: "10th of every month" },
+  { id: "fs-10", academicYear: "2026-2027", className: "Class 10", categoryId: "cat-01", categoryName: "Tuition Fee", amount: 2800, frequency: "Monthly", dueDate: "10th of every month" }
 ];
 
 export const initialConcessions: Concession[] = [
@@ -166,7 +166,7 @@ export const initialFeePayments: FeePayment[] = [
     amount: 1500,
     method: "Cash",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Full monthly tuition paid",
     status: "Completed"
@@ -184,7 +184,7 @@ export const initialFeePayments: FeePayment[] = [
     method: "Bank",
     referenceNo: "HDFC9823412",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["October"],
     remarks: "Bank transfer via netbanking",
     status: "Completed"
@@ -202,7 +202,7 @@ export const initialFeePayments: FeePayment[] = [
     method: "UPI",
     referenceNo: "UPI2638472910",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Google Pay payment",
     status: "Completed"
@@ -219,7 +219,7 @@ export const initialFeePayments: FeePayment[] = [
     amount: 1400,
     method: "Cash",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Cash counter payment",
     status: "Completed"
@@ -237,7 +237,7 @@ export const initialFeePayments: FeePayment[] = [
     method: "Bank",
     referenceNo: "SBI384729101",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Direct NEFT credit",
     status: "Completed"
@@ -255,7 +255,7 @@ export const initialFeePayments: FeePayment[] = [
     method: "Bank",
     referenceNo: "ICICI1928374",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["Part payment"],
     remarks: "Partial installment",
     status: "Completed"
@@ -272,7 +272,7 @@ export const initialFeePayments: FeePayment[] = [
     amount: 2800,
     method: "Cash",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Received at counter",
     status: "Completed"
@@ -289,7 +289,7 @@ export const initialFeePayments: FeePayment[] = [
     amount: 1100,
     method: "Cash",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["November"],
     remarks: "Full term payment",
     status: "Completed"
@@ -307,7 +307,7 @@ export const initialFeePayments: FeePayment[] = [
     method: "Bank",
     referenceNo: "AXIS8372619",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["October"],
     remarks: "Cleared outstanding",
     status: "Completed"
@@ -324,7 +324,7 @@ export const initialFeePayments: FeePayment[] = [
     amount: 1800,
     method: "Cash",
     category: "School Fee",
-    academicYear: "2026–2027",
+    academicYear: "2026-2027",
     months: ["October"],
     remarks: "Quarter payment",
     status: "Completed"
@@ -872,8 +872,8 @@ export const initialGeneralSettings: GeneralSettings = {
   phone: "+91 98470 12345",
   email: "office@al-falahschool.edu.in",
   logoText: "AFPS",
-  academicYear: "2026–2027",
-  financialYear: "2026–2027",
+  academicYear: "2026-2027",
+  financialYear: "2026-2027",
   currency: "INR (₹)",
   receiptFooterText: "Thank you for your payment. For fee queries, contact the school accounts department."
 };

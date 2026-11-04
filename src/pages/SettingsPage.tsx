@@ -23,14 +23,7 @@ import {
   Download,
   Upload,
   CheckCircle,
-  AlertTriangle,
-  Building,
-  GraduationCap,
-  Bus,
-  ShoppingBag,
-  CreditCard,
-  Users,
-  Database
+  AlertTriangle
 } from 'lucide-react';
 
 export type SettingsSubSection =
@@ -99,10 +92,6 @@ export const SettingsPage: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  const navigateSub = (sub: SettingsSubSection) => {
-    window.location.assign(`#/settings/${sub}`);
-  };
-
   // 1. General Settings Form
   const [generalForm, setGeneralForm] = useState(generalSettings);
   const [generalSavedToast, setGeneralSavedToast] = useState(false);
@@ -126,7 +115,7 @@ export const SettingsPage: React.FC = () => {
 
   const [isFsModalOpen, setIsFsModalOpen] = useState(false);
   const [fsForm, setFsForm] = useState({
-    academicYear: '2026–2027',
+    academicYear: '2026-2027',
     className: 'Class 1',
     categoryId: feeCategories[0]?.id || 'cat-01',
     amount: 1500,
@@ -267,46 +256,6 @@ export const SettingsPage: React.FC = () => {
         >
           Reset Demo Data
         </Button>
-      </div>
-
-      {/* Sub-options Navigation Bar */}
-      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
-        {[
-          { id: 'general', label: '1. General Settings', icon: Building },
-          { id: 'fee', label: '2. Fee Settings', icon: GraduationCap },
-          { id: 'bus', label: '3. Bus Settings', icon: Bus },
-          { id: 'store', label: '4. Store Settings', icon: ShoppingBag },
-          { id: 'payment', label: '5. Payment Settings', icon: CreditCard },
-          { id: 'users', label: '6. User & Roles', icon: Users },
-          { id: 'backup', label: '7. Backup & Data', icon: Database },
-        ].map(sub => {
-          const Icon = sub.icon;
-          const isActive = activeSub === sub.id;
-          return (
-            <button
-              key={sub.id}
-              onClick={() => navigateSub(sub.id as SettingsSubSection)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                fontSize: '13px',
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#5A54B4' : 'var(--color-text-secondary)',
-                backgroundColor: isActive ? 'var(--color-primary-light)' : 'var(--color-white)',
-                border: isActive ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Icon size={14} />
-              <span>{sub.label}</span>
-            </button>
-          );
-        })}
       </div>
 
       {/* 1. GENERAL SETTINGS */}
@@ -527,7 +476,7 @@ export const SettingsPage: React.FC = () => {
 
           {/* Class Structures */}
           <Card
-            title="Class-Wise Fee Structure (AY 2026–2027)"
+            title="Class-Wise Fee Structure (AY 2026-2027)"
             action={
               <Button
                 variant="primary"
@@ -624,7 +573,7 @@ export const SettingsPage: React.FC = () => {
                         {conc.discountType === 'Percentage' ? `${conc.discountValue}% Waiver` : formatCurrency(conc.discountValue)}
                       </td>
                       <td style={{ fontSize: '12px', color: 'var(--color-text-secondary)', maxWidth: '300px' }}>
-                        {conc.description || '—'}
+                        {conc.description || '-'}
                       </td>
                       <td>
                         <button
@@ -715,7 +664,7 @@ export const SettingsPage: React.FC = () => {
                     </td>
                     <td style={{ fontWeight: 600 }}>{formatCurrency(route.monthlyFee)}</td>
                     <td style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                      {route.termFee ? formatCurrency(route.termFee) : '—'}
+                      {route.termFee ? formatCurrency(route.termFee) : '-'}
                     </td>
                     <td style={{ textAlign: 'center' }}>
                       <Badge variant="purple">{route.assignedStudents} students</Badge>

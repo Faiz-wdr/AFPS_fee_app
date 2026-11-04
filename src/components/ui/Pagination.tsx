@@ -20,7 +20,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const startItem = totalItems > 0 ? (currentPage - 1) * pageSize + 1 : 0;
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
-  if (totalItems <= 0) return null;
+  if (totalItems < 20) return null;
 
   return (
     <div
@@ -38,7 +38,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       }}
     >
       <div>
-        Showing <strong style={{ color: 'var(--color-text-primary)' }}>{startItem}–{endItem}</strong> of{' '}
+        Showing <strong style={{ color: 'var(--color-text-primary)' }}>{startItem}-{endItem}</strong> of{' '}
         <strong style={{ color: 'var(--color-text-primary)' }}>{totalItems}</strong> {itemName}
       </div>
 

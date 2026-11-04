@@ -301,7 +301,7 @@ export const ParentPortal: React.FC = () => {
                   marginBottom: '6px'
                 }}
               >
-                Admission Number (Adm No.)
+                Admission Number
               </label>
               <input
                 id="parent-adm-no-input"
@@ -698,7 +698,7 @@ export const ParentPortal: React.FC = () => {
                 flexShrink: 0
               }}
             >
-              {generalSettings.academicYear || '2026–2027'}
+              {generalSettings.academicYear || '2026-2027'}
             </div>
           </div>
 

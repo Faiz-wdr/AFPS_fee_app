@@ -681,7 +681,7 @@ export const FinanceManagement: React.FC = () => {
                           </Badge>
                         </td>
                         <td style={{ fontSize: '13px' }}>{trf.description}</td>
-                        <td style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{trf.referenceNo || '—'}</td>
+                        <td style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{trf.referenceNo || '-'}</td>
                         <td style={{ fontSize: '12px' }}>{trf.transferredBy}</td>
                         <td style={{ textAlign: 'right', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                           {formatCurrency(trf.amount)}

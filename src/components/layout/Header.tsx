@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, ChevronDown, Check, User, ShieldCheck, Smartphone, ExternalLink } from 'lucide-react';
+import { Search, Bell, ChevronDown, Check, User, ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   pageTitle?: string;
@@ -11,7 +11,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSearch,
   onNotificationClick
 }) => {
-  const [academicYear, setAcademicYear] = useState('2026–2027');
+  const [academicYear, setAcademicYear] = useState('2026-2027');
   const [yearDropdownOpen, setYearDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [hasUnreadNotification, setHasUnreadNotification] = useState(true);
@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   const yearRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const academicYears = ['2026–2027', '2025–2026', '2024–2025'];
+  const academicYears = ['2026-2027', '2025-2026', '2024-2025'];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -106,9 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
           }}
           title="Open Mobile-First Parent Portal"
         >
-          <Smartphone size={14} />
           <span>Parent Portal</span>
-          <ExternalLink size={11} style={{ opacity: 0.7 }} />
         </button>
 
         {/* Academic Year Selector */}

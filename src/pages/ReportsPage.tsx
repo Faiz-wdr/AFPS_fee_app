@@ -821,11 +821,11 @@ export const ReportsPage: React.FC = () => {
         const netSurplus = totalIncome - expenseTotal;
 
         const rows = [
-          { col1: 'School Tuition Fee Income', col2: 'Revenue', col3: '—', col4: formatCurrency(tuitionTotal), col5: 'Credit', rawTotal: tuitionTotal },
-          { col1: 'Bus Conveyance Fee Income', col2: 'Revenue', col3: '—', col4: formatCurrency(busTotal), col5: 'Credit', rawTotal: busTotal },
-          { col1: 'Store Sales & Counter Cash', col2: 'Revenue', col3: '—', col4: formatCurrency(salesTotal), col5: 'Credit', rawTotal: salesTotal },
-          { col1: 'Operational & Administrative Vouchers', col2: 'Expenditure', col3: formatCurrency(expenseTotal), col4: '—', col5: 'Debit', rawTotal: -expenseTotal },
-          { col1: 'Net Operating Surplus / (Deficit)', col2: 'Operating Balance', col3: '—', col4: formatCurrency(netSurplus), col5: 'Net Balance', rawTotal: netSurplus },
+          { col1: 'School Tuition Fee Income', col2: 'Revenue', col3: '-', col4: formatCurrency(tuitionTotal), col5: 'Credit', rawTotal: tuitionTotal },
+          { col1: 'Bus Conveyance Fee Income', col2: 'Revenue', col3: '-', col4: formatCurrency(busTotal), col5: 'Credit', rawTotal: busTotal },
+          { col1: 'Store Sales & Counter Cash', col2: 'Revenue', col3: '-', col4: formatCurrency(salesTotal), col5: 'Credit', rawTotal: salesTotal },
+          { col1: 'Operational & Administrative Vouchers', col2: 'Expenditure', col3: formatCurrency(expenseTotal), col4: '-', col5: 'Debit', rawTotal: -expenseTotal },
+          { col1: 'Net Operating Surplus / (Deficit)', col2: 'Operating Balance', col3: '-', col4: formatCurrency(netSurplus), col5: 'Net Balance', rawTotal: netSurplus },
         ];
 
         return {
@@ -876,8 +876,8 @@ export const ReportsPage: React.FC = () => {
           return {
             col1: formatDate(tx.date),
             col2: tx.desc,
-            col3: tx.credit > 0 ? formatCurrency(tx.credit) : '—',
-            col4: tx.debit > 0 ? formatCurrency(tx.debit) : '—',
+            col3: tx.credit > 0 ? formatCurrency(tx.credit) : '-',
+            col4: tx.debit > 0 ? formatCurrency(tx.debit) : '-',
             col5: formatCurrency(runningBalance),
             rawTotal: runningBalance
           };
@@ -930,8 +930,8 @@ export const ReportsPage: React.FC = () => {
           return {
             col1: formatDate(tx.date),
             col2: tx.desc,
-            col3: tx.credit > 0 ? formatCurrency(tx.credit) : '—',
-            col4: tx.debit > 0 ? formatCurrency(tx.debit) : '—',
+            col3: tx.credit > 0 ? formatCurrency(tx.credit) : '-',
+            col4: tx.debit > 0 ? formatCurrency(tx.debit) : '-',
             col5: formatCurrency(runningBalance),
             rawTotal: runningBalance
           };
@@ -963,7 +963,7 @@ export const ReportsPage: React.FC = () => {
 
         const rows = [
           { col1: 'School Tuition Collections', col2: `${feePayments.length} receipts`, col3: formatCurrency(totalIncome), col4: 'Active', col5: formatCurrency(totalIncome), rawTotal: totalIncome },
-          { col1: 'Bus Conveyance Collections', col2: `${busPayments.length} receipts`, col3: '—', col4: 'Active', col5: '—', rawTotal: 0 },
+          { col1: 'Bus Conveyance Collections', col2: `${busPayments.length} receipts`, col3: '-', col4: 'Active', col5: '-', rawTotal: 0 },
           { col1: 'Operating Expenses Incurred', col2: `${vouchers.length} vouchers`, col3: formatCurrency(totalExpenses), col4: 'Audited', col5: formatCurrency(totalExpenses), rawTotal: totalExpenses },
           { col1: 'Net Liquidity Surplus', col2: 'Verified', col3: formatCurrency(totalIncome - totalExpenses), col4: 'Healthy', col5: formatCurrency(totalIncome - totalExpenses), rawTotal: totalIncome - totalExpenses },
         ];

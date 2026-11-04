@@ -279,16 +279,16 @@ export const StudentManagement: React.FC = () => {
           <table className="data-table">
             <thead>
               <tr>
-                <th style={{ width: '100px' }}>Adm No</th>
-                <th>Student Name</th>
-                <th style={{ width: '80px' }}>Class</th>
-                <th style={{ width: '50px' }}>Div</th>
-                <th>Parent Name</th>
-                <th style={{ width: '120px' }}>Parent Phone</th>
-                <th style={{ width: '110px', textAlign: 'right' }}>Monthly Fee</th>
-                <th style={{ width: '110px' }}>Bus Route</th>
-                <th style={{ width: '100px', textAlign: 'center' }}>Fee Status</th>
-                <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
+                <th style={{ width: '85px' }}>Adm No</th>
+                <th style={{ width: '160px' }}>Student Name</th>
+                <th style={{ width: '95px', whiteSpace: 'nowrap' }}>Class</th>
+                <th style={{ width: '45px' }}>Div</th>
+                <th style={{ width: '145px' }}>Parent Name</th>
+                <th style={{ width: '110px' }}>Parent Phone</th>
+                <th style={{ width: '105px', textAlign: 'right' }}>Monthly Fee</th>
+                <th style={{ minWidth: '200px' }}>Bus Route</th>
+                <th style={{ width: '90px', textAlign: 'center' }}>Fee Status</th>
+                <th style={{ width: '90px', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -309,7 +309,7 @@ export const StudentManagement: React.FC = () => {
                         {student.name}
                       </div>
                     </td>
-                    <td>{student.className}</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{student.className}</td>
                     <td>{student.division}</td>
                     <td>{student.parentName}</td>
                     <td style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
@@ -318,13 +318,13 @@ export const StudentManagement: React.FC = () => {
                     <td style={{ textAlign: 'right', fontWeight: 500 }}>
                       {formatCurrency(student.monthlyFee)}
                     </td>
-                    <td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
                       {student.busRoute ? (() => {
                         const r = busRoutes.find(route => route.routeNumber === student.busRoute || route.routeName === student.busRoute);
                         return (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#5A54B4' }}>
-                            <Bus size={12} />
-                            {r ? r.routeName : student.busRoute}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#5A54B4' }}>
+                            <Bus size={12} style={{ flexShrink: 0 }} />
+                            <span>{r ? r.routeName : student.busRoute}</span>
                           </span>
                         );
                       })() : (

@@ -61,6 +61,7 @@ export const SchoolFeeManagement: React.FC = () => {
 
   // Fee Details Filter
   const [detailsClassFilter, setDetailsClassFilter] = useState('All');
+  const [detailsStatusFilter, setDetailsStatusFilter] = useState<'All' | 'Paid' | 'Partial' | 'Pending'>('All');
   const [detailsSearch, setDetailsSearch] = useState('');
 
   // Payment History Filter
@@ -76,8 +77,8 @@ export const SchoolFeeManagement: React.FC = () => {
   const [historyPage, setHistoryPage] = useState(1);
   const [concessionPage, setConcessionPage] = useState(1);
 
-  const academicYears = ['2026–2027', '2025–2026', '2024–2025'];
-  const [selectedAcademicYear, setSelectedAcademicYear] = useState('2026–2027');
+  const academicYears = ['2026-2027', '2025-2026', '2024-2025'];
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState('2026-2027');
   const monthsList = ["June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
 
   // Overview metrics
@@ -298,9 +299,11 @@ export const SchoolFeeManagement: React.FC = () => {
       const matchesSearch = !detailsSearch ||
         s.name.toLowerCase().includes(detailsSearch.toLowerCase()) ||
         s.admissionNumber.toLowerCase().includes(detailsSearch.toLowerCase());
-      return matchesClass && matchesSearch;
+      const effectiveStatus = s.feeStatus || ((s.schoolFeePaid || 0) >= (s.schoolFeeTotal || s.monthlyFee * 10) ? 'Paid' : (s.schoolFeePaid || 0) > 0 ? 'Partial' : 'Pending');
+      const matchesStatus = detailsStatusFilter === 'All' || effectiveStatus === detailsStatusFilter;
+      return matchesClass && matchesSearch && matchesStatus;
     });
-  }, [students, detailsClassFilter, detailsSearch]);
+  }, [students, detailsClassFilter, detailsSearch, detailsStatusFilter]);
 
   // Filtered Payment History
   const filteredHistory = useMemo(() => {
@@ -611,26 +614,45 @@ export const SchoolFeeManagement: React.FC = () => {
         <Card padding="0">
           <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
             <h2 className="section-heading" style={{ margin: 0 }}>Student Fee Ledger Breakdown</h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ position: 'relative', minWidth: '220px' }}>
-                <Search size={14} color="#777777" style={{ position: 'absolute', left: '10px', top: '12px' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <div style={{ position: 'relative', minWidth: '200px' }}>
+                <Search size={14} color="#777777" style={{ position: 'absolute', left: '10px', top: '10px' }} />
                 <input
                   type="text"
                   placeholder="Filter student..."
                   value={detailsSearch}
-                  onChange={e => setDetailsSearch(e.target.value)}
+                  onChange={e => {
+                    setDetailsSearch(e.target.value);
+                    setDetailsPage(1);
+                  }}
                   style={{ width: '100%', paddingLeft: '32px', height: '34px', fontSize: '12px' }}
                 />
               </div>
               <select
                 value={detailsClassFilter}
-                onChange={e => setDetailsClassFilter(e.target.value)}
+                onChange={e => {
+                  setDetailsClassFilter(e.target.value);
+                  setDetailsPage(1);
+                }}
                 style={{ height: '34px', fontSize: '12px' }}
               >
                 <option value="All">All Classes</option>
                 {['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'].map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
+              </select>
+              <select
+                value={detailsStatusFilter}
+                onChange={e => {
+                  setDetailsStatusFilter(e.target.value as 'All' | 'Paid' | 'Partial' | 'Pending');
+                  setDetailsPage(1);
+                }}
+                style={{ height: '34px', fontSize: '12px' }}
+              >
+                <option value="All">All Status</option>
+                <option value="Paid">Paid</option>
+                <option value="Partial">Partial</option>
+                <option value="Pending">Pending</option>
               </select>
             </div>
           </div>
@@ -651,7 +673,14 @@ export const SchoolFeeManagement: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredFeeDetails.slice((detailsPage - 1) * 20, detailsPage * 20).map(student => {
+                {filteredFeeDetails.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-secondary)', fontSize: '13px' }}>
+                      No student records found matching the selected filters.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredFeeDetails.slice((detailsPage - 1) * 20, detailsPage * 20).map(student => {
                   const applicable = student.schoolFeeTotal || student.monthlyFee * 10;
                   const paid = student.schoolFeePaid || 0;
                   const pending = Math.max(0, applicable - paid);
@@ -687,8 +716,9 @@ export const SchoolFeeManagement: React.FC = () => {
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
+                })
+              )}
+            </tbody>
             </table>
           </div>
           <Pagination

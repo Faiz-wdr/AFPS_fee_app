@@ -360,7 +360,7 @@ export const StoreSalesManagement: React.FC = () => {
                     <option value="">-- Choose Product --</option>
                     {products.filter(p => p.status === 'Active' && p.stock > 0).map(p => (
                       <option key={p.id} value={p.id}>
-                        {p.name} — ₹{p.price} ({p.stock} in stock)
+                        {p.name} - ₹{p.price} ({p.stock} in stock)
                       </option>
                     ))}
                   </select>
