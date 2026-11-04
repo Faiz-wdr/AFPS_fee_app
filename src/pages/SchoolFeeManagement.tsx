@@ -277,7 +277,7 @@ export const SchoolFeeManagement: React.FC = () => {
       date: paymentDate || payment.date,
       title: 'School Tuition Fee Receipt',
       payeeOrStudent: `${payment.studentName} (Adm: ${payment.admissionNumber})`,
-      subInfo: `Class: ${payment.className} - Div ${payment.division} • Months: ${selectedMonths.join(', ')} • AY ${selectedAcademicYear}`,
+      subInfo: `${payment.className} - Div ${payment.division} • ${selectedMonths.join(', ')} • AY ${selectedAcademicYear}`,
       paymentMethod: payment.method,
       referenceNo: payment.referenceNo,
       items: [
@@ -431,195 +431,180 @@ export const SchoolFeeManagement: React.FC = () => {
               </Button>
             </div>
 
-              {/* Classes Table */}
-              <div className="table-container">
-                <table className="data-table">
-                  <thead>
+            {/* Classes Table */}
+            <div className="table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: '36px', textAlign: 'center' }}></th>
+                    <th>Class & Division</th>
+                    <th style={{ textAlign: 'center' }}>Total Students</th>
+                    <th style={{ textAlign: 'right' }}>Total Applicable</th>
+                    <th style={{ textAlign: 'right' }}>Total Collected</th>
+                    <th style={{ textAlign: 'right' }}>Pending Due</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredClassGroups.length === 0 ? (
                     <tr>
-                      <th style={{ width: '36px', textAlign: 'center' }}></th>
-                      <th>Class & Division</th>
-                      <th style={{ textAlign: 'center' }}>Total Students</th>
-                      <th style={{ textAlign: 'right' }}>Total Applicable</th>
-                      <th style={{ textAlign: 'right' }}>Total Collected</th>
-                      <th style={{ textAlign: 'right' }}>Pending Due</th>
-                      <th style={{ textAlign: 'center' }}>Action</th>
+                      <td colSpan={6} style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-secondary)' }}>
+                        No classes or students found matching "{studentSearch}"
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {filteredClassGroups.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-secondary)' }}>
-                          No classes or students found matching "{studentSearch}"
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredClassGroups.map(group => {
-                        const expanded = isClassExpanded(group.classKey);
-                        const displayedStudents = group.filteredStudents || group.students;
-                        return (
-                          <React.Fragment key={group.classKey}>
-                            {/* Class Row: Click to expand/collapse */}
-                            <tr
-                              onClick={() => toggleClass(group.classKey)}
+                  ) : (
+                    filteredClassGroups.map(group => {
+                      const expanded = isClassExpanded(group.classKey);
+                      const displayedStudents = group.filteredStudents || group.students;
+                      return (
+                        <React.Fragment key={group.classKey}>
+                          {/* Class Row: Click to expand/collapse */}
+                          <tr
+                            onClick={() => toggleClass(group.classKey)}
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: expanded ? '#F7F7FD' : undefined,
+                              transition: 'background-color 0.15s ease'
+                            }}
+                          >
+                            <td style={{ textAlign: 'center', color: '#5A54B4' }}>
+                              {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            </td>
+                            <td>
+                              <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--color-text-primary)' }}>
+                                {group.classKey}
+                              </span>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <Badge variant="purple">
+                                {group.totalStudents} {group.totalStudents === 1 ? 'student' : 'students'}
+                              </Badge>
+                            </td>
+                            <td style={{ textAlign: 'right', fontWeight: 500 }}>
+                              {formatCurrency(group.totalApplicable)}
+                            </td>
+                            <td style={{ textAlign: 'right', fontWeight: 600, color: 'var(--color-success)' }}>
+                              {formatCurrency(group.totalPaid)}
+                            </td>
+                            <td
                               style={{
-                                cursor: 'pointer',
-                                backgroundColor: expanded ? '#F7F7FD' : undefined,
-                                transition: 'background-color 0.15s ease'
+                                textAlign: 'right',
+                                fontWeight: 600,
+                                color: group.totalPending > 0 ? 'var(--color-danger)' : 'var(--color-success)'
                               }}
                             >
-                              <td style={{ textAlign: 'center', color: '#5A54B4' }}>
-                                {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                              </td>
-                              <td>
-                                <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--color-text-primary)' }}>
-                                  {group.classKey}
-                                </span>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <Badge variant="purple">
-                                  {group.totalStudents} {group.totalStudents === 1 ? 'student' : 'students'}
-                                </Badge>
-                              </td>
-                              <td style={{ textAlign: 'right', fontWeight: 500 }}>
-                                {formatCurrency(group.totalApplicable)}
-                              </td>
-                              <td style={{ textAlign: 'right', fontWeight: 600, color: 'var(--color-success)' }}>
-                                {formatCurrency(group.totalPaid)}
-                              </td>
-                              <td
-                                style={{
-                                  textAlign: 'right',
-                                  fontWeight: 600,
-                                  color: group.totalPending > 0 ? 'var(--color-danger)' : 'var(--color-success)'
-                                }}
-                              >
-                                {formatCurrency(group.totalPending)}
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <span
+                              {formatCurrency(group.totalPending)}
+                            </td>
+                          </tr>
+
+                          {/* Expanded Students Sub-Table */}
+                          {expanded && (
+                            <tr style={{ backgroundColor: '#FBFCFE' }}>
+                              <td colSpan={6} style={{ padding: '0 0 16px 0', borderBottom: '2px solid var(--color-border)' }}>
+                                <div
                                   style={{
-                                    fontSize: '12px',
-                                    fontWeight: 600,
-                                    color: '#5A54B4',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px'
+                                    margin: '6px 16px 8px 36px',
+                                    backgroundColor: '#FFFFFF',
+                                    borderRadius: '8px',
+                                    border: '1px solid #EAEAF0',
+                                    overflow: 'hidden',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                                   }}
                                 >
-                                  {expanded ? 'Hide Students' : 'View Students'}
-                                </span>
+                                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                                    <thead>
+                                      <tr style={{ backgroundColor: '#F4F4F8', borderBottom: '1px solid #EAEAF0' }}>
+                                        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
+                                          Adm No
+                                        </th>
+                                        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
+                                          Student Name
+                                        </th>
+                                        <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
+                                          Parent Details
+                                        </th>
+                                        <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: '11px', color: '#777777' }}>
+                                          Monthly Fee
+                                        </th>
+                                        <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: '11px', color: '#777777' }}>
+                                          Pending Due
+                                        </th>
+                                        <th style={{ padding: '8px 12px', textAlign: 'center', fontSize: '11px', color: '#777777' }}>
+                                          Action
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {displayedStudents.map(student => {
+                                        const applicable = student.schoolFeeTotal || student.monthlyFee * 10;
+                                        const pending = Math.max(0, applicable - (student.schoolFeePaid || 0));
+                                        return (
+                                          <tr
+                                            key={student.id}
+                                            style={{ borderBottom: '1px solid #F0F0F5' }}
+                                          >
+                                            {/* Admission Number WITHOUT bold */}
+                                            <td
+                                              style={{
+                                                padding: '9px 12px',
+                                                fontFamily: 'monospace',
+                                                fontWeight: 400,
+                                                color: 'var(--color-text-secondary)',
+                                                fontSize: '12px'
+                                              }}
+                                            >
+                                              {student.admissionNumber}
+                                            </td>
+                                            {/* Student Name IN BOLD */}
+                                            <td style={{ padding: '9px 12px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
+                                              {student.name}
+                                            </td>
+                                            <td style={{ padding: '9px 12px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
+                                              {student.parentName} ({student.parentPhone})
+                                            </td>
+                                            <td style={{ padding: '9px 12px', textAlign: 'right', fontWeight: 500 }}>
+                                              {formatCurrency(student.monthlyFee)}
+                                            </td>
+                                            <td
+                                              style={{
+                                                padding: '9px 12px',
+                                                textAlign: 'right',
+                                                fontWeight: 600,
+                                                color: pending > 0 ? 'var(--color-danger)' : 'var(--color-success)'
+                                              }}
+                                            >
+                                              {formatCurrency(pending)}
+                                            </td>
+                                            <td style={{ padding: '9px 12px', textAlign: 'center' }}>
+                                              <Button
+                                                variant="primary"
+                                                style={{ height: '28px', padding: '0 12px', fontSize: '11.5px' }}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleSelectStudentForPayment(student);
+                                                }}
+                                              >
+                                                Collect Fee
+                                              </Button>
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
                               </td>
                             </tr>
-
-                            {/* Expanded Students Sub-Table */}
-                            {expanded && (
-                              <tr style={{ backgroundColor: '#FBFCFE' }}>
-                                <td colSpan={7} style={{ padding: '0 0 16px 0', borderBottom: '2px solid var(--color-border)' }}>
-                                  <div
-                                    style={{
-                                      margin: '6px 16px 8px 36px',
-                                      backgroundColor: '#FFFFFF',
-                                      borderRadius: '8px',
-                                      border: '1px solid #EAEAF0',
-                                      overflow: 'hidden',
-                                      boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
-                                    }}
-                                  >
-                                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-                                      <thead>
-                                        <tr style={{ backgroundColor: '#F4F4F8', borderBottom: '1px solid #EAEAF0' }}>
-                                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
-                                            Adm No
-                                          </th>
-                                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
-                                            Student Name
-                                          </th>
-                                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#777777' }}>
-                                            Parent Details
-                                          </th>
-                                          <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: '11px', color: '#777777' }}>
-                                            Monthly Fee
-                                          </th>
-                                          <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: '11px', color: '#777777' }}>
-                                            Pending Due
-                                          </th>
-                                          <th style={{ padding: '8px 12px', textAlign: 'center', fontSize: '11px', color: '#777777' }}>
-                                            Action
-                                          </th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {displayedStudents.map(student => {
-                                          const applicable = student.schoolFeeTotal || student.monthlyFee * 10;
-                                          const pending = Math.max(0, applicable - (student.schoolFeePaid || 0));
-                                          return (
-                                            <tr
-                                              key={student.id}
-                                              style={{ borderBottom: '1px solid #F0F0F5' }}
-                                            >
-                                              {/* Admission Number WITHOUT bold */}
-                                              <td
-                                                style={{
-                                                  padding: '9px 12px',
-                                                  fontFamily: 'monospace',
-                                                  fontWeight: 400,
-                                                  color: 'var(--color-text-secondary)',
-                                                  fontSize: '12px'
-                                                }}
-                                              >
-                                                {student.admissionNumber}
-                                              </td>
-                                              {/* Student Name IN BOLD */}
-                                              <td style={{ padding: '9px 12px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                                                {student.name}
-                                              </td>
-                                              <td style={{ padding: '9px 12px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-                                                {student.parentName} ({student.parentPhone})
-                                              </td>
-                                              <td style={{ padding: '9px 12px', textAlign: 'right', fontWeight: 500 }}>
-                                                {formatCurrency(student.monthlyFee)}
-                                              </td>
-                                              <td
-                                                style={{
-                                                  padding: '9px 12px',
-                                                  textAlign: 'right',
-                                                  fontWeight: 600,
-                                                  color: pending > 0 ? 'var(--color-danger)' : 'var(--color-success)'
-                                                }}
-                                              >
-                                                {formatCurrency(pending)}
-                                              </td>
-                                              <td style={{ padding: '9px 12px', textAlign: 'center' }}>
-                                                <Button
-                                                  variant="primary"
-                                                  style={{ height: '28px', padding: '0 12px', fontSize: '11.5px' }}
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleSelectStudentForPayment(student);
-                                                  }}
-                                                >
-                                                  Collect Fee
-                                                </Button>
-                                              </td>
-                                            </tr>
-                                          );
-                                        })}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </React.Fragment>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
-          </div>
-        )}
+                          )}
+                        </React.Fragment>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* TAB 2: FEE DETAILS */}
       {activeTab === 'details' && (
@@ -958,17 +943,17 @@ export const SchoolFeeManagement: React.FC = () => {
             collectModalStep === 1
               ? 'Select Student to Collect Fee'
               : collectModalStep === 2
-              ? 'Fee Collection'
-              : 'Payment Recorded'
+                ? 'Fee Collection'
+                : 'Payment Recorded'
           }
           subtitle={
             collectModalStep === 1
-              ? 'Search and click any student to collect fee'
+              ? undefined
               : collectModalStep === 2 && selectedStudent
-              ? `${selectedStudent.name} (${selectedStudent.admissionNumber}) • ${selectedStudent.className.toLowerCase().startsWith('class') ? selectedStudent.className : `Class ${selectedStudent.className}`} - ${selectedStudent.division}`
-              : latestReceipt
-              ? `Receipt #${latestReceipt.receiptNumber}`
-              : undefined
+                ? `${selectedStudent.name} (${selectedStudent.admissionNumber}) • ${selectedStudent.className.toLowerCase().startsWith('class') ? selectedStudent.className : `Class ${selectedStudent.className}`} - ${selectedStudent.division}`
+                : latestReceipt
+                  ? `Receipt #${latestReceipt.receiptNumber}`
+                  : undefined
           }
           maxWidth={collectModalStep === 2 ? '640px' : collectModalStep === 1 ? '560px' : '480px'}
         >
@@ -1044,12 +1029,14 @@ export const SchoolFeeManagement: React.FC = () => {
                           <span style={{ fontWeight: 600, color: 'var(--color-text-primary)', fontSize: '13.5px' }}>
                             {st.name}
                           </span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <Badge variant="neutral">
                             {classText}
                           </Badge>
+                          <ChevronRight size={16} color="var(--color-text-secondary)" />
                         </div>
-
-                        <ChevronRight size={16} color="var(--color-text-secondary)" />
                       </div>
                     );
                   })
@@ -1146,13 +1133,13 @@ export const SchoolFeeManagement: React.FC = () => {
                             border: isPaid
                               ? '1px solid #D4EDDA'
                               : isSelected
-                              ? '2px solid #5A54B4'
-                              : '1px solid var(--color-border)',
+                                ? '2px solid #5A54B4'
+                                : '1px solid var(--color-border)',
                             backgroundColor: isPaid
                               ? '#F4FBF6'
                               : isSelected
-                              ? '#F0EFFB'
-                              : '#FFFFFF',
+                                ? '#F0EFFB'
+                                : '#FFFFFF',
                             cursor: isPaid ? 'default' : 'pointer',
                             display: 'flex',
                             flexDirection: 'column',
@@ -1292,31 +1279,65 @@ export const SchoolFeeManagement: React.FC = () => {
           })()}
 
           {/* STEP 3: ANIMATED SUCCESS SCREEN & RECEIPT PREVIEW */}
-          {collectModalStep === 3 && latestReceipt && (
-            <SuccessScreen
-              title="Payment Successfully Recorded!"
-              description={`Official tuition fee receipt #${latestReceipt.receiptNumber} generated.`}
-              amount={latestReceipt.totalAmount}
-              amountLabel="Total Credited"
-              details={[
-                { label: 'Student', value: <span style={{ fontWeight: 600 }}>{latestReceipt.payeeOrStudent}</span> },
-                { label: 'Particulars', value: latestReceipt.subInfo },
-                { label: 'Payment Mode', value: latestReceipt.paymentMethod }
-              ]}
-              secondaryAction={{
-                label: 'Collect Another',
-                onClick: () => {
-                  setCollectModalStep(1);
-                  setSelectedStudent(null);
-                }
-              }}
-              primaryAction={{
-                label: 'Print / View Receipt',
-                icon: <Printer size={15} />,
-                onClick: () => setPrintableReceipt(latestReceipt)
-              }}
-            />
-          )}
+          {collectModalStep === 3 && latestReceipt && (() => {
+            const match = latestReceipt.payeeOrStudent.match(/^(.*?)(?:\s*\((?:Adm:\s*)?([^)]+)\))?$/);
+            const studentName = match ? match[1]?.trim() : latestReceipt.payeeOrStudent;
+            const admNo = match ? match[2]?.trim() : '';
+            const cleanSubInfo = (latestReceipt.subInfo || '')
+              .replace(/^Class:\s*/i, '')
+              .replace(/Months:\s*/gi, '')
+              .trim();
+
+            return (
+              <SuccessScreen
+                title="Payment Successfully Recorded!"
+                amount={latestReceipt.totalAmount}
+                amountLabel="Total Credited"
+                details={[
+                  {
+                    value: (
+                      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary, #1A1A2E)' }}>
+                          {studentName}
+                        </span>
+                        {admNo && (
+                          <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-muted, #8E8EA0)' }}>
+                            {admNo}
+                          </span>
+                        )}
+                      </div>
+                    )
+                  },
+                  {
+                    value: (
+                      <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-text-secondary, #4A4A68)', lineHeight: 1.4 }}>
+                        {cleanSubInfo}
+                      </div>
+                    )
+                  },
+                  {
+                    value: (
+                      <div style={{ fontSize: '13px', color: 'var(--color-text-secondary, #666677)' }}>
+                        {latestReceipt.paymentMethod}
+                      </div>
+                    )
+                  }
+                ]}
+                secondaryAction={{
+                  label: 'Collect Another',
+                  onClick: () => {
+                    setCollectModalStep(1);
+                    setSelectedStudent(null);
+                  }
+                }}
+                primaryAction={{
+                  label: 'Receipt',
+                  icon: <Printer size={15} />,
+                  onClick: () => setPrintableReceipt(latestReceipt)
+                }}
+              />
+            );
+          })()}
         </Modal>
       )}
 

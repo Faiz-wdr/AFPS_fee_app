@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
+import type { Variants } from 'motion/react';
 import { Button } from '../ui/Button';
 import { formatCurrency } from '../../utils/formatters';
 
 export interface SuccessItemDetail {
-  label: string;
+  label?: string;
   value: React.ReactNode;
 }
 
@@ -25,6 +26,7 @@ export interface SuccessScreenProps {
   primaryAction?: SuccessAction;
   secondaryAction?: SuccessAction;
   showConfetti?: boolean;
+  align?: 'center' | 'left';
 }
 
 // Minimal, elegant confetti particle data
@@ -50,12 +52,13 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
   details = [],
   primaryAction,
   secondaryAction,
-  showConfetti = true
+  showConfetti = true,
+  align = 'center'
 }) => {
   const shouldReduceMotion = useReducedMotion();
 
   // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -71,14 +74,14 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 12 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: shouldReduceMotion ? 0.01 : 0.35,
-        ease: [0.25, 0.1, 0.25, 1]
+        ease: 'easeOut'
       }
     }
   };
@@ -208,7 +211,7 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
           style={{
             fontSize: '19px',
             fontWeight: 700,
-            margin: '0 0 5px 0',
+            margin: '0 0 4px 0',
             color: 'var(--color-text-primary, #1A1A2E)',
             letterSpacing: '-0.01em'
           }}
@@ -254,52 +257,100 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({
             width: '100%',
             backgroundColor: '#F9F9FC',
             border: '1px solid var(--color-border, #E6E6EE)',
-            borderRadius: '10px',
-            padding: '14px 18px',
+            borderRadius: '12px',
+            padding: '16px 20px',
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
-            textAlign: 'left',
-            fontSize: '12.5px',
+            textAlign: align === 'center' ? 'center' : 'left',
+            alignItems: align === 'center' ? 'center' : 'stretch',
+            fontSize: '13px',
             marginBottom: '16px'
           }}
         >
-          {details.map((item, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: '1px solid #ECECF2',
-                paddingBottom: '7px'
-              }}
-            >
-              <span style={{ color: 'var(--color-text-secondary, #666677)', fontWeight: 500 }}>
-                {item.label}:
-              </span>
-              <span style={{ color: 'var(--color-text-primary, #1A1A2E)' }}>
-                {item.value}
-              </span>
-            </div>
-          ))}
+          {details.map((item, idx) => {
+            const hasLabel = Boolean(item.label && item.label.trim().length > 0);
+            if (align === 'center' || !hasLabel) {
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    lineHeight: 1.45,
+                    fontSize: '13px'
+                  }}
+                >
+                  {hasLabel && (
+                    <span style={{ color: 'var(--color-text-secondary, #666677)', fontWeight: 500, marginRight: '4px' }}>
+                      {item.label}:
+                    </span>
+                  )}
+                  <span style={{ color: 'var(--color-text-primary, #1A1A2E)' }}>
+                    {item.value}
+                  </span>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottom: '1px solid #ECECF2',
+                  paddingBottom: '7px'
+                }}
+              >
+                <span style={{ color: 'var(--color-text-secondary, #666677)', fontWeight: 500 }}>
+                  {item.label}:
+                </span>
+                <span style={{ color: 'var(--color-text-primary, #1A1A2E)' }}>
+                  {item.value}
+                </span>
+              </div>
+            );
+          })}
 
           {amount !== undefined && (
             <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                paddingTop: details.length > 0 ? '4px' : '0'
-              }}
+              style={
+                align === 'center'
+                  ? {
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      paddingTop: details.length > 0 ? '10px' : '0',
+                      borderTop: details.length > 0 ? '1px solid #ECECF2' : 'none',
+                      marginTop: details.length > 0 ? '4px' : '0',
+                      width: '100%'
+                    }
+                  : {
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      paddingTop: details.length > 0 ? '4px' : '0'
+                    }
+              }
             >
-              <span style={{ fontWeight: 700, color: 'var(--color-text-primary, #1A1A2E)', fontSize: '13px' }}>
-                {amountLabel}:
-              </span>
+              {amountLabel && (
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary, #1A1A2E)',
+                    fontSize: '13px'
+                  }}
+                >
+                  {amountLabel}:
+                </span>
+              )}
               <span
                 style={{
-                  fontWeight: 700,
-                  fontSize: '17px',
+                  fontWeight: 800,
+                  fontSize: align === 'center' ? '20px' : '17px',
                   color: 'var(--color-success, #2E7D32)'
                 }}
               >

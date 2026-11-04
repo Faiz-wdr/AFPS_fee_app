@@ -7,6 +7,7 @@ import { Modal } from '../components/ui/Modal';
 import { Pagination } from '../components/ui/Pagination';
 import { ReceiptModal } from '../components/common/ReceiptModal';
 import type { PrintableReceiptData } from '../components/common/ReceiptModal';
+import { SuccessScreen } from '../components/common/SuccessScreen';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import type { BusRoute, Student, PaymentMethod } from '../types';
 import {
@@ -37,6 +38,7 @@ export const BusFeeManagement: React.FC = () => {
 
   // Printable receipt state
   const [printableReceipt, setPrintableReceipt] = useState<PrintableReceiptData | null>(null);
+  const [successReceipt, setSuccessReceipt] = useState<PrintableReceiptData | null>(null);
 
   // Collection State
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -173,7 +175,7 @@ export const BusFeeManagement: React.FC = () => {
       remarks: remarks || `Conveyance for ${selectedStudent.busRoute}`
     });
 
-    setPrintableReceipt({
+    const receiptData: PrintableReceiptData = {
       type: 'bus',
       receiptNumber: payment.receiptNumber,
       date: payment.date,
@@ -187,8 +189,9 @@ export const BusFeeManagement: React.FC = () => {
       ],
       totalAmount: payment.amount,
       remarks: payment.remarks
-    });
+    };
 
+    setSuccessReceipt(receiptData);
     setSelectedStudent(null);
     setReferenceNo('');
     setRemarks('');
@@ -960,6 +963,74 @@ export const BusFeeManagement: React.FC = () => {
               </p>
             </div>
           </div>
+        </Modal>
+      )}
+
+      {/* Animated Success Screen Modal */}
+      {successReceipt && (
+        <Modal
+          isOpen={!!successReceipt}
+          onClose={() => setSuccessReceipt(null)}
+          title="Payment Recorded"
+          subtitle={`Receipt #${successReceipt.receiptNumber}`}
+          maxWidth="480px"
+        >
+          {(() => {
+            const match = successReceipt.payeeOrStudent.match(/^(.*?)(?:\s*\((?:Adm:\s*)?([^)]+)\))?$/);
+            const studentName = match ? match[1]?.trim() : successReceipt.payeeOrStudent;
+            const admNo = match ? match[2]?.trim() : '';
+            const cleanSubInfo = (successReceipt.subInfo || '')
+              .replace(/^Class:\s*/i, '')
+              .replace(/Months:\s*/gi, '')
+              .trim();
+
+            return (
+              <SuccessScreen
+                title="Bus Fee Successfully Recorded!"
+                amount={successReceipt.totalAmount}
+                amountLabel="Total Credited"
+                details={[
+                  {
+                    value: (
+                      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary, #1A1A2E)' }}>
+                          {studentName}
+                        </span>
+                        {admNo && (
+                          <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-muted, #8E8EA0)' }}>
+                            {admNo}
+                          </span>
+                        )}
+                      </div>
+                    )
+                  },
+                  {
+                    value: (
+                      <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-text-secondary, #4A4A68)', lineHeight: 1.4 }}>
+                        {cleanSubInfo}
+                      </div>
+                    )
+                  },
+                  {
+                    value: (
+                      <div style={{ fontSize: '13px', color: 'var(--color-text-secondary, #666677)' }}>
+                        {successReceipt.paymentMethod}
+                      </div>
+                    )
+                  }
+                ]}
+                secondaryAction={{
+                  label: 'Collect Another',
+                  onClick: () => setSuccessReceipt(null)
+                }}
+                primaryAction={{
+                  label: 'Print / View Receipt',
+                  icon: <Printer size={15} />,
+                  onClick: () => setPrintableReceipt(successReceipt)
+                }}
+              />
+            );
+          })()}
         </Modal>
       )}
 

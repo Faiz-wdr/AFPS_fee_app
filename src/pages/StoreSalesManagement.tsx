@@ -7,6 +7,7 @@ import { Modal } from '../components/ui/Modal';
 import { Pagination } from '../components/ui/Pagination';
 import { ReceiptModal } from '../components/common/ReceiptModal';
 import type { PrintableReceiptData } from '../components/common/ReceiptModal';
+import { SuccessScreen } from '../components/common/SuccessScreen';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import type { Product, PaymentMethod } from '../types';
 import {
@@ -32,6 +33,7 @@ export const StoreSalesManagement: React.FC = () => {
 
   // Receipt Modal State
   const [printableReceipt, setPrintableReceipt] = useState<PrintableReceiptData | null>(null);
+  const [successReceipt, setSuccessReceipt] = useState<PrintableReceiptData | null>(null);
 
   // New Sale State (Cart of multiple products)
   const [cartItems, setCartItems] = useState<{ productId: string; quantity: number }[]>([]);
@@ -174,8 +176,8 @@ export const StoreSalesManagement: React.FC = () => {
       remarks: saleRemarks.trim() || undefined
     });
 
-    // Open Printable Receipt
-    setPrintableReceipt({
+    // Prepare Printable Receipt Data & Success Modal
+    const receiptData: PrintableReceiptData = {
       type: 'sale',
       receiptNumber: sale.receiptNumber,
       date: sale.date,
@@ -191,7 +193,9 @@ export const StoreSalesManagement: React.FC = () => {
       discount: sale.discount,
       totalAmount: sale.totalAmount,
       remarks: sale.remarks
-    });
+    };
+
+    setSuccessReceipt(receiptData);
 
     // Reset Cart
     setCartItems([]);
@@ -821,6 +825,37 @@ export const StoreSalesManagement: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Animated Success Screen Modal */}
+      {successReceipt && (
+        <Modal
+          isOpen={!!successReceipt}
+          onClose={() => setSuccessReceipt(null)}
+          title="Sale Completed"
+          subtitle={`Memo #${successReceipt.receiptNumber}`}
+          maxWidth="480px"
+        >
+          <SuccessScreen
+            title="Sale Successfully Recorded!"
+            amount={successReceipt.totalAmount}
+            amountLabel="Total Amount"
+            details={[
+              { value: <div style={{ fontWeight: 600, fontSize: '14.5px', color: 'var(--color-text-primary)' }}>{successReceipt.payeeOrStudent}</div> },
+              { value: <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>{successReceipt.subInfo}</div> },
+              { value: <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)' }}>{successReceipt.paymentMethod}</div> }
+            ]}
+            secondaryAction={{
+              label: 'New Sale',
+              onClick: () => setSuccessReceipt(null)
+            }}
+            primaryAction={{
+              label: 'Print / View Memo',
+              icon: <Printer size={15} />,
+              onClick: () => setPrintableReceipt(successReceipt)
+            }}
+          />
+        </Modal>
+      )}
 
       {/* Global Printable Receipt Modal */}
       <ReceiptModal

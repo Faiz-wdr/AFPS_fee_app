@@ -286,7 +286,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <div style={{ padding: '8px 10px', borderBottom: '1px solid var(--color-border)' }}>
                 <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)' }}>AFPS Principal / Admin</p>
-                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '2px' }}>Role: Super Administrator</p>
+                <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '2px' }}>Super Administrator</p>
               </div>
               <div style={{ padding: '4px 0' }}>
                 <button

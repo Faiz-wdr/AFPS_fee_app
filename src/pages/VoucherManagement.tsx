@@ -3,9 +3,11 @@ import { useAppStore } from '../context/useAppStore';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
+import { Modal } from '../components/ui/Modal';
 import { Pagination } from '../components/ui/Pagination';
 import { ReceiptModal } from '../components/common/ReceiptModal';
 import type { PrintableReceiptData } from '../components/common/ReceiptModal';
+import { SuccessScreen } from '../components/common/SuccessScreen';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import type { PaymentMethod } from '../types';
 import {
@@ -25,6 +27,7 @@ export const VoucherManagement: React.FC = () => {
 
   // Printable voucher modal
   const [printableReceipt, setPrintableReceipt] = useState<PrintableReceiptData | null>(null);
+  const [successReceipt, setSuccessReceipt] = useState<PrintableReceiptData | null>(null);
 
   // Form State
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -98,8 +101,8 @@ export const VoucherManagement: React.FC = () => {
       preparedBy: preparedBy.trim() || "Accounts Officer"
     });
 
-    // Open Voucher Preview
-    setPrintableReceipt({
+    // Prepare Voucher Data & Open Animated Success Screen
+    const receiptData: PrintableReceiptData = {
       type: 'voucher',
       receiptNumber: newVoucher.voucherNumber,
       date: newVoucher.date,
@@ -115,7 +118,9 @@ export const VoucherManagement: React.FC = () => {
       totalAmount: newVoucher.amount,
       remarks: newVoucher.remarks,
       preparedBy: newVoucher.preparedBy
-    });
+    };
+
+    setSuccessReceipt(receiptData);
 
     // Reset Form
     setDescription('');
@@ -518,6 +523,37 @@ export const VoucherManagement: React.FC = () => {
             </table>
           </div>
         </Card>
+      )}
+
+      {/* Animated Success Screen Modal */}
+      {successReceipt && (
+        <Modal
+          isOpen={!!successReceipt}
+          onClose={() => setSuccessReceipt(null)}
+          title="Voucher Created"
+          subtitle={`Voucher #${successReceipt.receiptNumber}`}
+          maxWidth="480px"
+        >
+          <SuccessScreen
+            title="Voucher Successfully Created!"
+            amount={successReceipt.totalAmount}
+            amountLabel="Disbursement Amount"
+            details={[
+              { value: <div style={{ fontWeight: 600, fontSize: '14.5px', color: 'var(--color-text-primary)' }}>{successReceipt.paidTo || successReceipt.payeeOrStudent}</div> },
+              { value: <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>{successReceipt.subInfo}</div> },
+              { value: <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)' }}>{successReceipt.paymentMethod}</div> }
+            ]}
+            secondaryAction={{
+              label: 'Done',
+              onClick: () => setSuccessReceipt(null)
+            }}
+            primaryAction={{
+              label: 'Print / View Voucher',
+              icon: <Printer size={15} />,
+              onClick: () => setPrintableReceipt(successReceipt)
+            }}
+          />
+        </Modal>
       )}
 
       {/* Printable Voucher Modal */}
